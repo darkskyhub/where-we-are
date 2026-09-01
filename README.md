@@ -1,2 +1,5 @@
-# where-we-are
-Dark Sky Hub: Where we are tonight. Interactive season page for the Solar System Drive.
+# Dark Sky Tonight
+
+Live: https://darkskyeco.github.io/where-we-are/
+
+Where Earth sits in the galaxy tonight, from Coonabarabran.

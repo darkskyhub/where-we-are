@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dark Sky Tonight</title>
+<meta name="description" content="Where Earth sits in the galaxy tonight, from Coonabarabran.">
+<meta name="theme-color" content="#07090f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Tonight">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<link rel="apple-touch-icon" href="https://darkskyhub.grok.me/images/dsh-coin.jpg">
+<style>
+  html,body{margin:0;height:100%;background:#07090f;color:#f3efe4;font-family:Figtree,system-ui,sans-serif}
+  .bar{position:fixed;top:0;left:0;right:0;z-index:2;display:flex;gap:10px;align-items:center;padding:10px 14px;background:#07090fd9;backdrop-filter:blur(8px);font-size:13px}
+  .bar b{letter-spacing:.12em;text-transform:uppercase;font-weight:700}
+  .bar a{color:#7ec8d4;margin-left:auto;text-decoration:none}
+  iframe{position:fixed;inset:44px 0 0 0;width:100%;height:calc(100% - 44px);border:0;background:#07090f}
+</style>
+</head>
+<body>
+  <div class="bar">
+    <b>Dark Sky Tonight</b>
+    <span>Dark Sky Hub</span>
+    <a href="./Where_We_Are_Tonight.html">Open full screen</a>
+  </div>
+  <iframe title="Dark Sky Tonight" src="./Where_We_Are_Tonight.html" allow="fullscreen"></iframe>
+  <script>
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
+  </script>
+</body>
+</html>
