@@ -2,7 +2,7 @@
   "name": "Dark Sky Tonight",
   "short_name": "Tonight",
   "description": "Where Earth sits in the galaxy tonight, from Coonabarabran.",
-  "start_url": "./Where_We_Are_Tonight.html",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#07090f",
