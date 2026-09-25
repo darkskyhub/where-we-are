@@ -14,7 +14,7 @@
 <link rel="icon" type="image/svg+xml" href="./favicon.svg">
 <style>
   html,body{margin:0;height:100%;background:#07090f;color:#f3efe4;font-family:Figtree,system-ui,sans-serif}
-  .bar{position:fixed;top:0;left:0;right:0;z-index:2;display:flex;gap:10px;align-items:center;padding:10px 14px;background:#07090fd9;backdrop-filter:blur(8px);font-size:13px}
+  .bar{position:fixed;top:0;left:0;right:0;z-index:2;display:flex;gap:10px;align-items:center;padding:10px 14px;background:#07090fd9;font-size:13px}
   .bar b{letter-spacing:.12em;text-transform:uppercase;font-weight:700}
   .bar button{color:#7ec8d4;margin-left:auto;background:none;border:0;font:inherit;cursor:pointer}
   iframe{position:fixed;inset:44px 0 92px 0;width:100%;height:calc(100% - 136px);border:0;background:#07090f}
@@ -33,22 +33,43 @@
     <span>Dark Sky Hub</span>
     <button type="button" id="fullBtn">Open full screen</button>
   </div>
-  <iframe id="skyFrame" title="Sky tonight" src="https://grove-plum-gem-turbo.grok.me/?v=20260925-family" allow="fullscreen" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  <iframe id="skyFrame" title="Sky tonight" src="about:blank" allow="fullscreen" referrerpolicy="no-referrer-when-downgrade"></iframe>
   <footer class="family">
     <p class="hub">Dark Sky Hub</p>
     <p class="row"><a href="https://darkskyhub.github.io/solar-system-drive/">Solar System Drive</a> <span class="dot">·</span> <span class="here">Sky tonight</span> <span class="dot">·</span> <a href="https://darkskyhub.github.io/dark-sky-calendar/">Dark Sky Calendar</a> <span class="dot">·</span> <a href="https://darkskyhub.github.io/dark-sky-birds/">Dark Sky Birds</a></p>
     <p class="site"><a href="https://darkskyhub.com.au/">darkskyhub.com.au</a></p>
   </footer>
   <script>
-    var live = "https://grove-plum-gem-turbo.grok.me/?v=20260925-family";
+    var live = "https://grove-plum-gem-turbo.grok.me/?v=20260925-flight";
     var fallback = "./Where_We_Are_Tonight.html";
     var frame = document.getElementById("skyFrame");
+    var usedFallback = false;
     function useFallback() {
-      if (frame.getAttribute("data-fallback") === "1") return;
-      frame.setAttribute("data-fallback", "1");
+      if (usedFallback) return;
+      usedFallback = true;
       frame.src = fallback;
     }
-    if (!navigator.onLine) useFallback();
+    function useLive() {
+      if (usedFallback) return;
+      frame.src = live;
+      setTimeout(function () {
+        if (usedFallback) return;
+        try {
+          var href = frame.contentWindow && frame.contentWindow.location && frame.contentWindow.location.href;
+          if (!href || href === "about:blank") useFallback();
+        } catch (err) {
+          if (!navigator.onLine) useFallback();
+        }
+      }, 2500);
+    }
+    if (navigator.onLine === false) useFallback();
+    else {
+      var probe = new Image();
+      probe.onload = useLive;
+      probe.onerror = useFallback;
+      probe.src = "https://grove-plum-gem-turbo.grok.me/favicon.svg?ping=" + Date.now();
+      setTimeout(function () { if (!frame.getAttribute("src") || frame.getAttribute("src") === "about:blank") useFallback(); }, 3000);
+    }
     window.addEventListener("offline", useFallback);
     frame.addEventListener("error", useFallback);
     document.getElementById("fullBtn").addEventListener("click", function () {
