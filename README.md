@@ -1,5 +1,8 @@
-# Dark Sky Tonight
+# Sky tonight
 
-Live: https://darkskyeco.github.io/where-we-are/
+Public door: https://darkskyhub.github.io/where-we-are/
+Live edit host: https://grove-plum-gem-turbo.grok.me/
 
-Where Earth sits in the galaxy tonight, from Coonabarabran.
+The public door is the app. It is not an iframe.
+
+Distances on this page are teaching pictures, not survey numbers.
