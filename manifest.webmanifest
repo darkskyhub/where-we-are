@@ -1,29 +1,30 @@
 {
-  "name": "Dark Sky Tonight",
+  "name": "Sky tonight",
   "short_name": "Tonight",
   "description": "Where Earth sits in the galaxy tonight, from Coonabarabran.",
+  "id": "./",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#07090f",
-  "theme_color": "#07090f",
+  "background_color": "#070b14",
+  "theme_color": "#070b14",
   "icons": [
     {
-      "src": "https://darkskyhub.grok.me/images/dsh-coin.jpg",
+      "src": "./icon-192.png",
       "sizes": "192x192",
-      "type": "image/jpeg",
+      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "https://darkskyhub.grok.me/images/dsh-coin.jpg",
+      "src": "./icon-512.png",
       "sizes": "512x512",
-      "type": "image/jpeg",
-      "purpose": "any maskable"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "./favicon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml"
+      "src": "./icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png"
     }
   ]
 }

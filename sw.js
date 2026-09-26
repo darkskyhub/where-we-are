@@ -1,24 +1,83 @@
-const CACHE = "dsh-tonight-door-v20260925";
-const PRECACHE = ["./", "./index.html", "./offline.html", "./manifest.webmanifest", "./Where_We_Are_Tonight.html"];
-self.addEventListener("install", function (event) {
-  event.waitUntil(caches.open(CACHE).then(function (cache) { return cache.addAll(PRECACHE).catch(function () {}); }));
-  self.skipWaiting();
+const CACHE = "sky-tonight-v20260926";
+
+async function precache(cache) {
+  let list = [];
+  try {
+    const res = await fetch(new URL("precache.json", self.location));
+    if (res.ok) list = await res.json();
+  } catch (err) {
+    console.warn("precache list missing", err);
+  }
+  if (!Array.isArray(list)) return;
+  for (const item of list) {
+    try {
+      await cache.add(new URL(item, self.location));
+    } catch (err) {
+      console.warn("precache miss", item, err);
+    }
+  }
+}
+
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches
+      .open(CACHE)
+      .then((cache) => precache(cache))
+      .then(() => self.skipWaiting()),
+  );
 });
-self.addEventListener("activate", function (event) {
-  event.waitUntil(caches.keys().then(function (keys) { return Promise.all(keys.filter(function (key) { return key !== CACHE; }).map(function (key) { return caches.delete(key); })); }));
-  self.clients.claim();
+
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches
+      .keys()
+      .then((keys) =>
+        Promise.all(
+          keys
+            .filter((key) => key !== CACHE)
+            .map((key) => caches.delete(key)),
+        ),
+      )
+      .then(() => self.clients.claim()),
+  );
 });
-self.addEventListener("fetch", function (event) {
-  var req = event.request;
-  if (req.method !== "GET") return;
-  var url = new URL(req.url);
+
+self.addEventListener("fetch", (event) => {
+  const request = event.request;
+  if (request.method !== "GET") return;
+  const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
-  event.respondWith(fetch(req).then(function (res) {
-    if (res.ok) { var copy = res.clone(); caches.open(CACHE).then(function (cache) { cache.put(req, copy); }); }
-    return res;
-  }).catch(function () {
-    return caches.match(req).then(function (cached) {
-      return cached || caches.match("./Where_We_Are_Tonight.html") || caches.match("./offline.html") || caches.match("./index.html") || new Response("No service just now.", { status: 503, headers: { "Content-Type": "text/plain" } });
-    });
-  }));
+
+  event.respondWith(
+    (async () => {
+      const cache = await caches.open(CACHE);
+      const scoped = new URL(".", self.location);
+      const shell = new URL("./", self.location).href;
+      if (request.mode === "navigate") {
+        try {
+          const fresh = await fetch(request);
+          if (fresh.ok) await cache.put(request, fresh.clone());
+          if (fresh.ok) return fresh;
+        } catch {
+          /* use the cached sky page */
+        }
+        return (
+          (await cache.match(request)) ||
+          (await cache.match(shell)) ||
+          (await cache.match(new URL("index.html", scoped))) ||
+          (await cache.match(new URL("offline.html", scoped))) ||
+          Response.error()
+        );
+      }
+      const hit = await cache.match(request);
+      if (hit) return hit;
+      try {
+        const fresh = await fetch(request);
+        if (fresh.ok) await cache.put(request, fresh.clone());
+        return fresh;
+      } catch {
+        return hit || Response.error();
+      }
+    })(),
+  );
 });
