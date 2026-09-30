@@ -1,4 +1,4 @@
-const CACHE = "sky-tonight-v20260926";
+const CACHE = "sky-tonight-v20260930";
 
 async function precache(cache) {
   let list = [];
